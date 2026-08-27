@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>spendradar</title>
+  <script type="module" crossorigin src="/assets/index-3gpQ3YuT.js"></script>
+  <link rel="stylesheet" crossorigin href="/assets/index-DeN01dDo.css">
+</head>
+<body>
+
+<div class="header">
+  <svg width="28" height="28" viewBox="0 0 28 28" fill="none" stroke="#d61f1f" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M14 3c1 2 3 4 6 5s5 3 4 6-3 4-5 5-4 1-6 2-5-1-6-3-2-4-1-6 3-4 5-5 3-3 3-4z"/>
+    <path d="M14 3v3"/>
+    <path d="M9 7l-2-2"/>
+    <path d="M19 7l2-2"/>
+    <path d="M12 18l-1 3"/>
+    <path d="M16 18l1 3"/>
+    <circle cx="11" cy="12" r="1" fill="#d61f1f" stroke="none"/>
+    <circle cx="17" cy="12" r="1" fill="#d61f1f" stroke="none"/>
+  </svg>
+  <h1>spendradar</h1>
+  <div class="header-actions">
+    <button class="btn btn-sm" id="loadSampleBtn">load sample data</button>
+    <button class="btn btn-sm" id="exportCsvBtn">export csv</button>
+    <button class="btn btn-sm" id="clearAllBtn">clear all data</button>
+  </div>
+</div>
+
+<div class="tabs">
+  <button class="tab active" data-tab="dashboard">dashboard</button>
+  <button class="tab" data-tab="subscriptions">subscriptions</button>
+  <button class="tab" data-tab="expenses">expenses</button>
+  <button class="tab" data-tab="budget">budget</button>
+</div>
+
+<div class="panel active" id="dashboard">
+  <div class="stats-grid" id="dashStats"></div>
+  <div id="alertStrip"></div>
+  <div class="section-title">this month's spend by category</div>
+  <div class="card" id="categoryChart"></div>
+</div>
+
+<div class="panel" id="subscriptions">
+  <div class="card">
+    <form id="subForm">
+      <div class="form-row">
+        <div class="form-group">
+          <label>name</label>
+          <input type="text" id="subName" required>
+        </div>
+        <div class="form-group">
+          <label>price</label>
+          <input type="number" id="subPrice" min="0" step="0.01" required>
+        </div>
+        <div class="form-group">
+          <label>cycle</label>
+          <select id="subCycle">
+            <option value="monthly">monthly</option>
+            <option value="weekly">weekly</option>
+            <option value="yearly">yearly</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>next renewal date</label>
+          <input type="date" id="subRenewal" required>
+        </div>
+        <div class="form-group">
+          <label>category</label>
+          <select id="subCategory">
+            <option value="entertainment">entertainment</option>
+            <option value="productivity">productivity</option>
+            <option value="cloud">cloud</option>
+            <option value="music">music</option>
+            <option value="video">video</option>
+            <option value="software">software</option>
+            <option value="other">other</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>&nbsp;</label>
+          <div class="checkbox-row">
+            <input type="checkbox" id="subTrial">
+            <label for="subTrial">free trial</label>
+          </div>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group" style="flex:3">
+          <label>note</label>
+          <input type="text" id="subNote" placeholder="optional">
+        </div>
+        <div class="form-group" style="flex:0 0 auto">
+          <label>&nbsp;</label>
+          <button type="submit" class="btn btn-accent" id="subSaveBtn">add subscription</button>
+        </div>
+      </div>
+      <input type="hidden" id="subEditId" value="">
+    </form>
+  </div>
+  <div class="filter-bar">
+    <input type="text" id="subSearch" placeholder="search subscriptions...">
+    <select id="subFilterCat">
+      <option value="">all categories</option>
+      <option value="entertainment">entertainment</option>
+      <option value="productivity">productivity</option>
+      <option value="cloud">cloud</option>
+      <option value="music">music</option>
+      <option value="video">video</option>
+      <option value="software">software</option>
+      <option value="other">other</option>
+    </select>
+  </div>
+  <div id="subList"></div>
+</div>
+
+<div class="panel" id="expenses">
+  <div class="card">
+    <form id="expForm">
+      <div class="form-row">
+        <div class="form-group">
+          <label>title</label>
+          <input type="text" id="expTitle" required>
+        </div>
+        <div class="form-group">
+          <label>amount</label>
+          <input type="number" id="expAmount" min="0" step="0.01" required>
+        </div>
+        <div class="form-group">
+          <label>date</label>
+          <input type="date" id="expDate" required>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>category</label>
+          <select id="expCategory">
+            <option value="food">food</option>
+            <option value="transport">transport</option>
+            <option value="shopping">shopping</option>
+            <option value="bills">bills</option>
+            <option value="health">health</option>
+            <option value="other">other</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>method</label>
+          <select id="expMethod">
+            <option value="upi">upi</option>
+            <option value="cash">cash</option>
+            <option value="card">card</option>
+            <option value="other">other</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>note</label>
+          <input type="text" id="expNote" placeholder="optional">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group" style="flex:1"></div>
+        <div class="form-group" style="flex:0 0 auto">
+          <button type="submit" class="btn btn-accent" id="expSaveBtn">add expense</button>
+        </div>
+      </div>
+      <input type="hidden" id="expEditId" value="">
+    </form>
+  </div>
+  <div class="filter-bar">
+    <input type="text" id="expSearch" placeholder="search expenses...">
+    <select id="expFilterCat">
+      <option value="">all categories</option>
+      <option value="food">food</option>
+      <option value="transport">transport</option>
+      <option value="shopping">shopping</option>
+      <option value="bills">bills</option>
+      <option value="health">health</option>
+      <option value="other">other</option>
+    </select>
+    <button class="btn btn-sm" id="expSortBtn">sort: newest</button>
+  </div>
+  <div class="chips" id="expChips">
+    <button class="chip" data-chip="today">today</button>
+    <button class="chip" data-chip="week">this week</button>
+    <button class="chip" data-chip="month">this month</button>
+    <button class="chip" data-chip="biggest">biggest expense</button>
+  </div>
+  <div id="expList"></div>
+</div>
+
+<div class="panel" id="budget">
+  <div class="card">
+    <div class="form-row">
+      <div class="form-group">
+        <label>monthly budget</label>
+        <input type="number" id="budgetInput" min="0" step="0.01" placeholder="enter amount">
+      </div>
+      <div class="form-group" style="flex:0 0 auto">
+        <label>&nbsp;</label>
+        <button class="btn btn-accent" id="budgetSaveBtn">save</button>
+      </div>
+    </div>
+  </div>
+  <div id="budgetDisplay"></div>
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>
